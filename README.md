@@ -1,47 +1,67 @@
 # Linux-Server-Configuration-Udacity
 This project is deploying the [Item Catalog Application](https://github.com/JasLinnie/udacity-itemcatalog) to be hosted on a Ubuntu Linux server on an Amazon Lightsail instance. To set this up, please go through the following instructions. The application is deployed live on http://13.250.107.163.
 
-* Public IP address: 13.250.107.163
-* SSH port: 2200
-## Start a new Ubuntu Linux Server instance on Amazon Lightsail
-1. Create an AWS account
-2. Click **Create instance** button on the home page
+## Create a Ubuntu Linux Server instance on Amazon Lightsail
+1. Log in to Lightsail or create an AWS account
+2. Click **Create an instance** 
 3. Select **Linux/Unix** platform
-4. Select **OS Only** and **Ubuntu** as blueprint
+4. Select **OS Only** and **Ubuntu** for blueprint
 5. Select an instance plan
 6. Name your instance
-7. Click **Create** button
+7. Click **Create** 
 
-## SSH into your Server
-1. Download private key from the **SSH keys** section in the **Account** section on Amazon Lightsail. The file name should be like _LightsailDefaultPrivateKey-us-east-2.pem_
-2. Create a new file named **lightsail_key.rsa** under ~/.ssh folder on your local machine
-3. Copy and paste content from downloaded private key file to **lightsail_key.rsa**
-4. Set file permission as owner only : `$ chmod 600 ~/.ssh/lightsail_key.rsa`
-5. SSH into the instance: `$ ssh -i ~/.ssh/lightsail_key.rsa ubuntu@18.218.99.181`
+## SSH into your Server instance
+Within the instance you just created, you can click **Connect using SSH** to SSH into your server instance. Alternative, you can follow these steps to connect using your own SSH client:
+1. In your Lightsail account, click **Account** on the top navigation bar and click **Account** again
+2. Click **SSH keys** tab
+3. Click download to download the private key. It should be a .pem file
+4. Create a new .rsa file e.g. lightsail_key.rsa within your local ~/.ssh folder
+5. Copy and paste content from downloaded private key file into .rsa file
+6. Set file permission as owner only using `$ chmod 600 ~/.ssh/lightsail_key.rsa`
+7. SSH into the instance using `$ ssh -i ~/.ssh/lightsail_key.rsa ubuntu@13.250.107.163`
 
 ## Update all currently installed packages
-1. Run `sudo apt-get update` to update packages
-2. Run `sudo apt-get upgrade` to install newest versions of packages
-3. Set for future updates: `sudo apt-get dist-upgrade`
+1. In either the browser-based ssh client launched from Lightsail or your own ssh client, run `sudo apt-get update` to update packages
+2. Run `sudo apt-get upgrade` to install the newest versions of the packages
+3. Set this for any future updates: `sudo apt-get dist-upgrade`
 
-##  Change the SSH port from 22 to 2200
+## Change the SSH port
 1. Run `$ sudo nano /etc/ssh/sshd_config` to open up the configuration file
 2. Change the port number from **22** to **2200** in this file
 3. Save and exit the file
-4. Restart SSH: `$ sudo service ssh restart`
+4. Restart SSH using `$ sudo service ssh restart`
 
 ## Configure the firewall
-1. Check firewall status: `$ sudo ufw status`
-2. Set default firewall to deny all incomings: `$ sudo ufw default deny incoming`
-3. Set default firewall to allow all outgoings: `$ sudo ufw default allow outgoing`
-4. Allow incoming TCP packets on port 2200 to allow SSH: `$ sudo ufw allow 2200/tcp`
-5. Allow incoming TCP packets on port 80 to allow www: `$ sudo ufw allow www`
-6. Allow incoming UDP packets on port 123 to allow NTP: `$ sudo ufw allow 123/udp`
-7. Close port 22: `$ sudo ufw deny 22`
-8. Enable firewall: `$ sudo ufw enable`
-9. Check out current firewall status: `$ sudo ufw status`
-10. Update the firewall configuration on Amazon Lightsail website under **Networking**. Delete default SSH port 22 and add **port 80, 123, 2200**
-11. Open up a new terminal and you can now ssh in via the new port 2200: `$ ssh -i ~/.ssh/lightsail_key.rsa ubuntu@18.218.99.181 -p 2200`
+1. Check the firewall status using `$ sudo ufw status`
+2. Set the default firewall to deny all incomings using `$ sudo ufw default deny incoming`
+3. Set the default firewall to allow all outgoings using `$ sudo ufw default allow outgoing`
+4. Allow incoming TCP packets on port 2200 to allow SSH using `$ sudo ufw allow 2200/tcp`
+5. Allow incoming TCP packets on port 80 to allow www using `$ sudo ufw allow www`
+6. Allow incoming UDP packets on port 123 to allow NTP using `$ sudo ufw allow 123/udp`
+7. Close port 22 using `$ sudo ufw deny 22`
+8. Enable firewall using `$ sudo ufw enable`
+9. Check the current firewall status using `$ sudo ufw status`
+10. Update the firewall configuration in your Amazon Lightsail instance by going to the **Networking** tab. 
+11. Delete default SSH port 22 and add ports with these settings: 
+```
+      HTTP 80/TCP
+      Custom 123/UDP
+      Custom 2200/TCP 
+```
+12. If you are using your own ssh client, open up a new terminal and try ssh in via the new port 2200 using `$ ssh -i ~/.ssh/lightsail_key.rsa ubuntu@13.250.107.163 -p 2200`
+13. If you ssh in using Lightsail's browser-based ssh client, you can no longer use that. Open up a terminal and try ssh in via the new port 2200 using `$ ssh -i ~/.ssh/lightsail_key.rsa ubuntu@13.250.107.163 -p 2200` 
+
+If you are using Windows PC, you can download a third party application to do this. You can download the Putty file as well as Putty key generator file [here](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). After installing them, follow these steps:
+1. Open up putty generator application
+2. Click **Conversions** and then **Import key**
+3. Select the private key .pem file you downloaded from your instance
+4. Click **Save Private Key** and save the file
+5. Open putty application and enter the 13.250.107.163 IP address and port 2200
+6. Connection type should be **SSH**
+7. In left tree, navigate to Connection > SSH > Auth
+8. Click **Browse** and select the saved file from putty generator 
+9. Go back to **Session** and name the session and save
+10. Click **Open** to ssh into the instance
 
 ## Create a new user account **grader** and give **grader** sudo access
 1. Create a new user account **grader**:`$ sudo adduser grader`
