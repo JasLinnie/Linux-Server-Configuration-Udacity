@@ -75,7 +75,8 @@ If you are using Windows PC, you can download a third party application to do th
     * In your local machine's `~/.ssh` folder, open and read the generated public key using
      `cat ~/.ssh/FILE-NAME.pub`
     * In your ubuntu server, create the .ssh folder inside the grader folder i.e. /home/grader, and within it create the authorized_keys file:
-   ```$ mkdir .ssh
+   ```
+      $ mkdir .ssh
       $ touch .ssh/authorized_keys
       $ nano .ssh/authorized_keys
       ```
