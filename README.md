@@ -96,13 +96,13 @@ If you are using Windows PC, you can download a third party application to do th
 
 ## Install and configure Apache
 1. Install **Apache** using `$ sudo apt-get install apache2`
-2. Go to http://18.218.99.181/, if Apache is working correctly, a **Apache2 Ubuntu Default Page** will show up
+2. In your browser go to http://13.250.107.163/, you should see a **Apache2 Ubuntu Default Page** if Apache is configured correctly
 
-## Install and configure Python mod_wsgi
-1. Install the **mod_wsgi** package: `$ sudo apt-get install libapache2-mod-wsgi python-dev`
-2. Enable **mod_wsgi**: `$ sudo a2enmod wsgi`
-3. Restart **Apache**: `$ sudo service apache2 restart`
-4. Check if Python is installed: `$ python`
+## Install and configure the mod_wsgi file
+1. Install the **mod_wsgi** package using `$ sudo apt-get install libapache2-mod-wsgi python-dev`
+2. Enable **mod_wsgi** using `$ sudo a2enmod wsgi`
+3. Restart **Apache** using `$ sudo service apache2 restart`
+4. To check if Python is installed, use `$ python`
 
 ## Install PostgreSQL
 1. Run `$ sudo apt-get install postgresql`
