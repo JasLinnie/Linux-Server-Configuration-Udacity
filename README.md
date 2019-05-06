@@ -63,37 +63,38 @@ If you are using Windows PC, you can download a third party application to do th
 9. Go back to **Session** and name the session and save
 10. Click **Open** to ssh into the instance
 
-## Create a new user account **grader** and give **grader** sudo access
-1. Create a new user account **grader**:`$ sudo adduser grader`
-2. `$ sudo nano /etc/sudoers`
-3. Create a file named grader under this path: `$ sudo touch /etc/sudoers.d/grader`
-4. Edit this file: `$ sudo nano /etc/sudoers.d/grader`, add code `grader ALL=(ALL:ALL) ALL`. Save and exit
+## Create user account **grader**
+1. Create a new user account **grader** using `$ sudo adduser grader`
+2. Create a file using `$ sudo touch /etc/sudoers.d/grader`
+3. Edit the file using `$ sudo nano /etc/sudoers.d/grader`
+4. Add this `grader ALL=(ALL:ALL) ALL` to the file and save it
 
-## Set SSH login using keys
-1. Create an SSH key pair for **grader** using the `ssh-keygen` tool on your local machine. Save it in `~/.ssh` path
-2. Deploy public key on development environment
-    * On your local machine, read the generated public key
+## Set SSH login for user grader
+1. Open a terminal in your local machine, use `ssh-keygen` to create an SSH key pair for **grader** and save it in the `~/.ssh` path
+2. Insert the generated public key into the ubuntu server 
+    * In your local machine's `~/.ssh` folder, open and read the generated public key using
      `cat ~/.ssh/FILE-NAME.pub`
-    * On your virtual machine
-   ```$ su -grader
-      $ mkdir .ssh
+    * In your ubuntu server, create the .ssh folder inside the grader folder i.e. /home/grader, and within it create the authorized_keys file:
+   ```$ mkdir .ssh
       $ touch .ssh/authorized_keys
       $ nano .ssh/authorized_keys
       ```
-    * Copy the public key to this _authorized_keys_ file on the virtual machine and save
-3. Run `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys` on your virtual machine to change file permission
-4. Restart SSH: `$ sudo service ssh restart`
-5. Now you are able to login in as grader: `$ ssh -i ~/.ssh/grader_key -p 2200 grader@18.218.99.181`
-6. You will be asked for grader's password. To unable it, open configuration file again: `$ sudo nano /etc/ssh/sshd_config`
-7. Change `PasswordAuthentication yes` to **no**
-8. Restart SSH: `$ sudo service ssh restart`
+    * Copy the generated public key and paste it into this authorized_keys file and save it
+3. In your terminal logged in to the ubuntu server, use `chown -R grader.grader /home/grader/.ssh` to change ownership and permissions of the .ssh folder to grader 
+4. Run `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys` to change the permissions too
+5. Restart SSH using `$ sudo service ssh restart`
+6. Try to login in as user grader using `$ ssh -i ~/.ssh/grader_key -p 2200 grader@13.250.107.163`
+   Or if you are using Putty, follow the same steps provided above to convert the key and SSH into the instance as grader
+7. You will be asked for grader's password. To disable it, open the configuration file using `$ sudo nano /etc/ssh/sshd_config`
+8. Change `PasswordAuthentication yes` to **no**
+9. Restart SSH using `$ sudo service ssh restart`
 
 ## Configure the local timezone to UTC
 1. Run `$ sudo dpkg-reconfigure tzdata`
 2. Choose **None of the above** to set timezone to UTC
 
 ## Install and configure Apache
-1. Install **Apache**: `$ sudo apt-get install apache2`
+1. Install **Apache** using `$ sudo apt-get install apache2`
 2. Go to http://18.218.99.181/, if Apache is working correctly, a **Apache2 Ubuntu Default Page** will show up
 
 ## Install and configure Python mod_wsgi
