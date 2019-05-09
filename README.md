@@ -105,10 +105,9 @@ If you are using Windows PC, you can download a third party application to do th
 4. To check if Python is installed, use `$ python`
 
 ## Install PostgreSQL
-1. Run `$ sudo apt-get install postgresql`
-2. Make sure PostgreSQL does not allow remote connections
-3. Open file: `$ sudo nano /etc/postgresql/9.5/main/pg_hba.conf`
-4. Check to make sure it looks like this:
+1. Run this `$ sudo apt-get install postgresql`
+2. Open this file using `$ sudo nano /etc/postgresql/9.5/main/pg_hba.conf`
+3. Make sure the file content is as follow:
    ```
    # Database administrative login by Unix domain socket
    local   all             postgres                                peer
@@ -122,45 +121,40 @@ If you are using Windows PC, you can download a third party application to do th
    # IPv6 local connections:
    host    all             all             ::1/128                 md5
    ```
-## Create new PostgreSQL user called **catalog**
-1. Switch to PostgreSQL defualt user **postgres**: `$ sudo su - postgres`
-2. Connect to PostgreSQL: `$ psql`
-3. Create user **catalog** with LOGIN role: `# CREATE ROLE catalog WITH PASSWORD 'password';`
-4. Allow user to create database tables: `# ALTER USER catalog CREATEDB;`
-5. Create database: `# CREATE DATABASE catalog WITH OWNER catalog;`
-6. Connect to database **catalog**: `# \c catalog`
-7. Revoke all the rights: `# REVOKE ALL ON SCHEMA public FROM public;`
-8. Grant access to **catalog**: `# GRANT ALL ON SCHEMA public TO catalog;`
-9. Exit psql: `\q`
-10.Exit user **postgres**: `exit`
+## Create a new PostgreSQL user **catalog**
+1. Change to PostgreSQL default user **postgres** using `$ sudo su - postgres`
+2. Connect to PostgreSQL using `$ psql`
+3. Create user **catalog** with the password as 'password' using `# CREATE ROLE catalog WITH PASSWORD 'password';`
+4. Change user role to allow creation of database tables using `# ALTER USER catalog CREATEDB;`
+5. Create database with owner using `# CREATE DATABASE catalog WITH OWNER catalog;`
+6. Connect to the database **catalog** using `# \c catalog`
+7. Revoke all the rights using `# REVOKE ALL ON SCHEMA public FROM public;`
+8. Grant access to user **catalog** using `# GRANT ALL ON SCHEMA public TO catalog;`
+9. Exit from psql using `\q`
+10. Exit from user **postgres** using `exit`
 
-## Create new Linux user called **catalog** and new database
-1. Create a new Linux user: `$ sudo adduser catalog`
-2. Give **catalog** user sudo access:
+## Create new Linux user **catalog**
+1. Create a new Linux user using `$ sudo adduser catalog`
+2. Give user **catalog** sudo access using
    * `$ sudo visudo`
    * Add `$ catalog ALL=(ALL:ALL) ALL` under line `$ root ALL=(ALL:ALL) ALL`
    * Save and exit the file
-3. Log in as **catalog**: `$ sudo su - catalog`
-4. Create database **catalog**: `createdb catalog`
-5. Exit user **catalog**: `exit`
+3. Log in as user **catalog** using `$ sudo su - catalog`
+4. Exit from user **catalog** using `exit`
 
-## Install git and clone catalog application from github
-1. Run `$ sudo apt-get install git`
-2. Create dictionary: `$ mkdir /var/www/catalog`
-3. CD to this directory: `$ cd /var/www/catalog`
-4. Clone the catalog app: `$ sudo git clone RELEVENT-URL catalog`
-5. Change the ownership: `$ sudo chown -R ubuntu:ubuntu catalog/`
-6. CD to `/var/www/catalog/catalog`
-7. Change file **application.py** to **__init__.py**: `$ mv application.py __init__.py`
-8. Change line `app.run(host='0.0.0.0', port=8000)` to `app.run()` in **__init__.py** file
+## Install git and clone the Item Catalog project
+1. Install git using `$ sudo apt-get install git`
+2. Create directory using `$ mkdir /var/www/catalog`
+3. Navigate to this directory using `$ cd /var/www/catalog`
+4. Git clone the catalog project using `$ sudo git clone RELEVENT-URL catalog`
+5. Change the ownership of the catalog folder using `$ sudo chown -R ubuntu:ubuntu catalog/`
+6. Navigate to this directory using: `/var/www/catalog/catalog`
+7. Change the file name from **applicationsports_users.py** to **__init__.py** using `$ mv applicationsports_users.py __init__.py`
+8. Change this line `app.run(host='0.0.0.0', port=8000)` to `app.run()` in the **__init__.py** file
 
-## Edit client_secrets.json file
-1. Create a new project on Google API Console and download `client_scretes.json` file
-2. Copy and paste contents of downloaded `client_scretes.json` to the file with same name under directory `/var/www/catalog/catalog/client_secrets.json`
-
-## Setup for deploying a Flask App on Ubuntu VPS
-1. Install pip: `$ sudo apt-get install python-pip`
-2. Install packages:
+## Setup for deploying a Flask App on Ubuntu instance
+1. Install pip using `$ sudo apt-get install python-pip`
+2. Install the packages using
 ```
    $ sudo pip install httplib2
    $ sudo pip install requests
@@ -171,24 +165,22 @@ If you are using Windows PC, you can download a third party application to do th
    $ sudo pip install psycopg2
    ```
 
-## Setup and enble a virtual host
-1. Create file: `$ sudo touch /etc/apache2/sites-available/catalog.conf`
+## Setup the .conf file
+1. Create this file using `$ sudo touch /etc/apache2/sites-available/catalog.conf`
 2. Add the following to the file:
 ```
    <VirtualHost *:80>
-		ServerName XX.XX.XX.XX
-		ServerAdmin admin@xx.xx.xx.xx
+		ServerName 13.250.107.163
+		ServerAdmin test@admin.com
 		WSGIScriptAlias / /var/www/catalog/catalog.wsgi
 		<Directory /var/www/catalog/catalog/>
 			Order allow,deny
 			Allow from all
-			Options -Indexes
 		</Directory>
 		Alias /static /var/www/catalog/catalog/static
 		<Directory /var/www/catalog/catalog/static/>
 			Order allow,deny
 			Allow from all
-			Options -Indexes
 		</Directory>
 		ErrorLog ${APACHE_LOG_DIR}/error.log
 		LogLevel warn
@@ -196,39 +188,33 @@ If you are using Windows PC, you can download a third party application to do th
    </VirtualHost>
    ```
 3. Run `$ sudo a2ensite catalog` to enable the virtual host
-4. Restart **Apache**: `$ sudo service apache2 reload`
+4. Restart **Apache** using `$ sudo service apache2 reload`
 
-## Configure .wsgi file
-1. Create file: `$ sudo touch /var/www/catalog/catalog.wsgi`
-2. Add content below to this file and save:
+## Setup the .wsgi file
+1. Create this file using `$ sudo touch /var/www/catalog/catalog.wsgi`
+2. Add the following to the file:
 ```
    #!/usr/bin/python
    import sys
    import logging
    logging.basicConfig(stream=sys.stderr)
-   sys.path.insert(0,"/var/www/nuevoMexico/")
+   sys.path.insert(0, "/var/www/catalog/")
 
-   from nuevoMexico import app as application
+   from catalog import app as application
    application.secret_key = 'super_secret_key'
 ```
-3. Restart **Apache**: `$ sudo service apache2 reload`
+3. Restart **Apache** using `$ sudo service apache2 reload`
 
-## Edit the database path
-1. Replace lines in `__init__.py`, `database_setup.py`, and `lotsofitems.py` with `engine = create_engine('postgresql://catalog:INSERT_PASSWORD_FOR_DATABASE_HERE@localhost/catalog')`
+## Update the database path in the app files
+1. Update the database line in `__init__.py`, `database_setup_users.py`, and `lotsofsportsitems_users.py` with `engine = create_engine('postgresql://catalog:INSERT_PASSWORD_FOR_DATABASE_HERE@localhost/catalog')`
 
-## Disable defualt Apache page
-1. `$ sudo a2dissite 000-defualt.conf`
-2. Restart **Apache**: `$ sudo service apache2 reload`
+## Disable the default Apache page
+1. Run `$ sudo a2dissite 000-defualt.conf`
+2. Restart **Apache** using `$ sudo service apache2 reload`
 
-## Set up database schema
-1. Run `$ sudo python database_setup.py`
-2. Run `$ sudo python lotsofitems.py`
-3. Restart **Apache**: `$ sudo service apache2 reload`
-4. Now follow the link to http://18.218.99.181/  the application should be runing online
-5. If internal errors occur: check the [Apache error file](https://www.a2hosting.com/kb/developer-corner/apache-web-server/viewing-apache-log-files)
-
-## Sources
-1. [Amazon Lightsail Website](https://aws.amazon.com/lightsail/?p=tile)
-2. [Google API Concole](https://console.cloud.google.com/)
-3. [Udacity](https://www.udacity.com)
-4. [Apache](https://httpd.apache.org/docs/2.2/configuring.html)
+## Create the database file
+1. Run `$ sudo python database_setup_users.py`
+2. Run `$ sudo python lotsofsportsitems_users.py`
+3. Restart **Apache** using `$ sudo service apache2 reload`
+4. Accessing http://13.250.107.163  the application should be live
+5. If there are internal errors, check the [Apache error file](https://www.a2hosting.com/kb/developer-corner/apache-web-server/viewing-apache-log-files) e.g. run `sudo grep -i invalid /var/log/apache2/error.log` and resolve the traceback call errors it displays
