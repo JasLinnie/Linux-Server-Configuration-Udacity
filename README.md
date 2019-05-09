@@ -1,5 +1,5 @@
 # Linux-Server-Configuration-Udacity
-This project is deploying the [Item Catalog Application](https://github.com/JasLinnie/udacity-itemcatalog) to be hosted on a Ubuntu Linux server on an Amazon Lightsail instance. To set this up, please go through the following instructions. The application is deployed live on http://13.250.107.163.
+This project is deploying the [Item Catalog Application](https://github.com/JasLinnie/udacity-itemcatalog) to be hosted on a Ubuntu Linux server on an Amazon Lightsail instance. To set this up, please go through the following instructions. The application is deployed live on http://13.250.107.163 and SSH port 2200.
 
 ## Create a Ubuntu Linux Server instance on Amazon Lightsail
 1. Log in to Lightsail or create an AWS account
