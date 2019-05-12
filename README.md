@@ -217,4 +217,4 @@ If you are using Windows PC, you can download a third party application to do th
 2. Run `$ sudo python lotsofsportsitems_users.py`
 3. Restart **Apache** using `$ sudo service apache2 reload`
 4. Accessing http://13.250.107.163  the application should be live
-5. If there are internal errors, check the [Apache error file](https://www.a2hosting.com/kb/developer-corner/apache-web-server/viewing-apache-log-files) e.g. run `sudo grep -i invalid /var/log/apache2/error.log` and resolve the traceback call errors it displays
+5. If there are internal errors, check the [Apache error file](https://www.a2hosting.com/kb/developer-corner/apache-web-server/viewing-apache-log-files) e.g. run `sudo tail -100 /var/log/apache2/error.log` and resolve the traceback call errors it displays
